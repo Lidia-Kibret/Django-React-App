@@ -1,0 +1,26 @@
+# Python / Django
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+env/
+*.env
+*.log
+*.pot
+*.py[cod]
+
+# Django migrations
+*/migrations/*.py
+!*/migrations/__init__.py
+
+# Node / React
+node_modules/
+build/
+.env
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
