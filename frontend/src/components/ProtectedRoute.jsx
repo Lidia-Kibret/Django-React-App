@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import jwtDecode from "jwt-decode";
+import jwtDecode from "jwt-decode"; // ✅ default import
 import api from "../api";
 import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants";
 import { useState, useEffect } from "react";
@@ -13,12 +13,8 @@ function ProtectedRoute({ children }) {
 
   const refreshToken = async () => {
     const refresh = localStorage.getItem(REFRESH_TOKEN);
-
     try {
-      const res = await api.post("/api/token/refresh/", {
-        refresh: refresh,
-      });
-
+      const res = await api.post("/api/token/refresh/", { refresh });
       if (res.status === 200) {
         localStorage.setItem(ACCESS_TOKEN, res.data.access);
         setIsAuthorized(true);
@@ -33,27 +29,21 @@ function ProtectedRoute({ children }) {
 
   const auth = async () => {
     const token = localStorage.getItem(ACCESS_TOKEN);
-
     if (!token) {
       setIsAuthorized(false);
       return;
     }
-
-    const decoded = jwtDecode(token);
-    const tokenExpiration = decoded.exp;
+    const decoded = jwtDecode(token); // ✅ just call it directly
     const now = Date.now() / 1000;
 
-    if (tokenExpiration < now) {
+    if (decoded.exp < now) {
       await refreshToken();
     } else {
       setIsAuthorized(true);
     }
   };
 
-  if (isAuthorized === null) {
-    return <div>Loading...</div>;
-  }
-
+  if (isAuthorized === null) return <div>Loading...</div>;
   return isAuthorized ? children : <Navigate to="/login" />;
 }
 
